@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tell Us About Your Student — Science on the Court</title>
+<style>
+:root {
+  --navy:#0d1b2a; --navy-2:#1b2838; --blue:#2e6b9e; --yellow:#ffd60a;
+  --bg:#F5F4F0; --card:#FFFFFF; --text:#1a1a1a; --muted:#6a7a8a;
+  --border:rgba(0,0,0,0.09); --green:#1a7742; --red:#c0392b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  background:var(--bg);min-height:100vh;color:var(--text);line-height:1.5;
+  padding:20px 14px;}
+.wrap{max-width:640px;margin:0 auto;}
+.hero{background:var(--navy);color:#fff;border-radius:12px;padding:28px 24px;margin-bottom:16px;text-align:center;}
+.hero .kicker{font-size:12px;letter-spacing:2px;color:var(--yellow);text-transform:uppercase;font-weight:700;margin-bottom:6px;}
+.hero h1{font-size:26px;line-height:1.25;margin-bottom:8px;font-weight:800;}
+.hero p{font-size:15px;color:#b0bdd0;}
+.card{background:var(--card);border-radius:12px;padding:22px 22px;margin-bottom:14px;border:1px solid var(--border);}
+.card h2{font-size:17px;color:var(--navy);margin-bottom:14px;border-bottom:2px solid #e2e6ec;padding-bottom:8px;}
+.q{margin-bottom:16px;}
+.q:last-child{margin-bottom:0;}
+.q label{display:block;font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text);}
+.q .sub{font-size:13px;color:var(--muted);font-weight:400;display:block;margin-top:2px;}
+.q input[type=text], .q textarea, .q select{width:100%;padding:11px 13px;font-size:15px;
+  border:1px solid #d0d6e0;border-radius:8px;background:#fafbfc;font-family:inherit;
+  -webkit-appearance:none;appearance:none;}
+.q textarea{resize:vertical;min-height:72px;}
+.q input:focus, .q textarea:focus, .q select:focus{outline:none;border-color:var(--blue);background:#fff;}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.choices.four{grid-template-columns:1fr 1fr;}
+.choices label{display:block;padding:11px 12px;background:#fafbfc;border:1px solid #d0d6e0;
+  border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;text-align:center;
+  transition:all .12s;-webkit-tap-highlight-color:transparent;}
+.choices input{display:none;}
+.choices input:checked + span{color:#fff;}
+.choices label:has(input:checked){background:var(--blue);border-color:var(--blue);color:#fff;}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.scale label{padding:12px 4px;background:#fafbfc;border:1px solid #d0d6e0;
+  border-radius:8px;cursor:pointer;font-size:15px;font-weight:600;text-align:center;transition:all .12s;-webkit-tap-highlight-color:transparent;}
+.scale input{display:none;}
+.scale label:has(input:checked){background:var(--blue);border-color:var(--blue);color:#fff;}
+.scale-legend{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;}
+.submit{width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;
+  padding:16px;font-size:17px;font-weight:700;cursor:pointer;margin-top:4px;
+  -webkit-tap-highlight-color:transparent;}
+.submit:active{opacity:.85;}
+.submit:disabled{opacity:.5;cursor:not-allowed;}
+#status{text-align:center;margin-top:12px;font-size:14px;min-height:20px;}
+#status.err{color:var(--red);}
+#status.ok{color:var(--green);}
+.thanks{display:none;text-align:center;padding:40px 24px;}
+.thanks.show{display:block;}
+.thanks h2{color:var(--navy);font-size:24px;margin-bottom:10px;}
+.thanks p{color:var(--muted);font-size:15px;}
+.footer{text-align:center;color:var(--muted);font-size:12px;padding:14px 0 24px;}
+.required{color:var(--red);font-weight:700;}
+@media (max-width:480px){
+  .hero{padding:22px 18px;}
+  .hero h1{font-size:22px;}
+  .card{padding:18px 16px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <p class="kicker">Science on the Court</p>
+  <h1>Tell Us About Your Student</h1>
+  <p>3 minutes. Fill this out together with your student — it helps Coach G plan a strong first week.</p>
+</div>
+
+<form id="intake-form">
+
+  <!-- Student basics -->
+  <div class="card">
+    <h2>Student Info</h2>
+    <div class="q">
+      <label>Student's first name <span class="required">*</span></label>
+      <input type="text" name="student_first" required>
+    </div>
+    <div class="q">
+      <label>Student's last name <span class="required">*</span></label>
+      <input type="text" name="student_last" required>
+    </div>
+    <div class="q">
+      <label>Grade <span class="required">*</span></label>
+      <div class="choices">
+        <label><input type="radio" name="grade" value="6" required><span>6th</span></label>
+        <label><input type="radio" name="grade" value="7"><span>7th</span></label>
+        <label><input type="radio" name="grade" value="8"><span>8th</span></label>
+        <label><input type="radio" name="grade" value="other"><span>Other</span></label>
+      </div>
+    </div>
+    <div class="q">
+      <label>Parent/guardian name <span class="required">*</span></label>
+      <input type="text" name="parent_name" required>
+    </div>
+    <div class="q">
+      <label>Parent email <span class="required">*</span></label>
+      <input type="text" name="parent_email" required>
+    </div>
+  </div>
+
+  <!-- Academic baseline -->
+  <div class="card">
+    <h2>Starting Point — Math &amp; Coding</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">No right answers. We ask so we can measure growth by the end of the year.</p>
+
+    <div class="q">
+      <label>How confident does your student feel in math? <span class="required">*</span></label>
+      <div class="scale">
+        <label><input type="radio" name="math_confidence" value="1" required><span>1</span></label>
+        <label><input type="radio" name="math_confidence" value="2"><span>2</span></label>
+        <label><input type="radio" name="math_confidence" value="3"><span>3</span></label>
+        <label><input type="radio" name="math_confidence" value="4"><span>4</span></label>
+        <label><input type="radio" name="math_confidence" value="5"><span>5</span></label>
+      </div>
+      <div class="scale-legend"><span>Not confident</span><span>Very confident</span></div>
+    </div>
+
+    <div class="q">
+      <label>Has your student written code before? <span class="required">*</span></label>
+      <div class="choices four">
+        <label><input type="radio" name="coding_exp" value="none" required><span>Never tried</span></label>
+        <label><input type="radio" name="coding_exp" value="little"><span>A little</span></label>
+        <label><input type="radio" name="coding_exp" value="some"><span>Some experience</span></label>
+        <label><input type="radio" name="coding_exp" value="regular"><span>Codes regularly</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label>Has your student built or programmed a robot before? <span class="required">*</span></label>
+      <div class="choices four">
+        <label><input type="radio" name="robot_exp" value="none" required><span>Never</span></label>
+        <label><input type="radio" name="robot_exp" value="once"><span>Once or twice</span></label>
+        <label><input type="radio" name="robot_exp" value="few"><span>A few times</span></label>
+        <label><input type="radio" name="robot_exp" value="regular"><span>Regularly</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEM identity -->
+  <div class="card">
+    <h2>Interests &amp; STEM Identity</h2>
+
+    <div class="q">
+      <label>How interested is your student in STEM (science, tech, engineering, math)? <span class="required">*</span></label>
+      <div class="scale">
+        <label><input type="radio" name="stem_interest" value="1" required><span>1</span></label>
+        <label><input type="radio" name="stem_interest" value="2"><span>2</span></label>
+        <label><input type="radio" name="stem_interest" value="3"><span>3</span></label>
+        <label><input type="radio" name="stem_interest" value="4"><span>4</span></label>
+        <label><input type="radio" name="stem_interest" value="5"><span>5</span></label>
+      </div>
+      <div class="scale-legend"><span>Not at all</span><span>Very interested</span></div>
+    </div>
+
+    <div class="q">
+      <label>Can your student see themself in a STEM career someday (engineer, programmer, scientist, etc.)? <span class="required">*</span></label>
+      <div class="choices four">
+        <label><input type="radio" name="stem_career" value="yes" required><span>Yes</span></label>
+        <label><input type="radio" name="stem_career" value="maybe"><span>Maybe</span></label>
+        <label><input type="radio" name="stem_career" value="no"><span>No</span></label>
+        <label><input type="radio" name="stem_career" value="unsure"><span>Not sure yet</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label>How does your student feel about basketball? <span class="required">*</span></label>
+      <span class="sub">Our sessions blend basketball and STEM &mdash; this helps us know whether basketball is a motivator or something we'll need to work around.</span>
+      <div class="choices four" style="margin-top:8px;">
+        <label><input type="radio" name="bball" value="loves" required><span>Loves it &mdash; a big reason they signed up</span></label>
+        <label><input type="radio" name="bball" value="likes"><span>Likes it / happy to play</span></label>
+        <label><input type="radio" name="bball" value="neutral"><span>Neutral &mdash; takes it or leaves it</span></label>
+        <label><input type="radio" name="bball" value="not_interested"><span>Not interested &mdash; may be a barrier</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goals + Support -->
+  <div class="card">
+    <h2>Goals &amp; Support</h2>
+
+    <div class="q">
+      <label>What is your student hoping to get out of this program?</label>
+      <span class="sub">One or two sentences is fine.</span>
+      <textarea name="goals" rows="3"></textarea>
+    </div>
+
+    <div class="q">
+      <label>Anything we should know to help your student succeed?</label>
+      <span class="sub">Allergies, accommodations, learning differences, schedule constraints, anything else.</span>
+      <textarea name="support_needs" rows="3"></textarea>
+    </div>
+  </div>
+
+  <button class="submit" type="submit" id="submit-btn">Send to Coach G &amp; Dorian</button>
+  <p id="status"></p>
+</form>
+
+<div class="thanks card" id="thanks">
+  <h2>Got it — thank you!</h2>
+  <p>Coach G and Dorian will review this before your student's first session. If we have any follow-up questions we'll reach out.</p>
+  <p style="margin-top:12px;">See you at John Muir Room B11.</p>
+</div>
+
+<p class="footer">Science on the Court &middot; <a href="https://www.scienceonthecourt.com" style="color:var(--muted);">scienceonthecourt.com</a></p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+const REPORT_EMAIL = "dbohler@scienceonthecourt.com";
+const EMAILJS_CONFIG = {
+  publicKey:  "ipaVLQ_Dm6mxja_XA",
+  serviceId:  "service_q1l18a2",
+  templateId: "template_439vcb9"  // TODO: create a dedicated intake-form template in EmailJS and paste its ID here
+};
+
+emailjs.init(EMAILJS_CONFIG.publicKey);
+
+const form = document.getElementById("intake-form");
+const btn = document.getElementById("submit-btn");
+const status = document.getElementById("status");
+const thanks = document.getElementById("thanks");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  btn.disabled = true;
+  status.className = "";
+  status.textContent = "Sending...";
+
+  const data = new FormData(form);
+  const get = (k) => (data.get(k) || "").toString().trim();
+
+  const body = [
+    `Student: ${get("student_first")} ${get("student_last")} (Grade ${get("grade")})`,
+    `Parent: ${get("parent_name")} <${get("parent_email")}>`,
+    ``,
+    `Math confidence (1-5): ${get("math_confidence")}`,
+    `Coding experience: ${get("coding_exp")}`,
+    `Robotics experience: ${get("robot_exp")}`,
+    ``,
+    `STEM interest (1-5): ${get("stem_interest")}`,
+    `STEM career consideration: ${get("stem_career")}`,
+    `Basketball: ${get("bball") || "—"}`,
+    ``,
+    `Goals:`,
+    get("goals") || "—",
+    ``,
+    `Support needs / accommodations:`,
+    get("support_needs") || "—",
+  ].join("\n");
+
+  const params = {
+    to_email: REPORT_EMAIL,
+    student: `${get("student_first")} ${get("student_last")}`,
+    date: new Date().toISOString().slice(0,10),
+    session_num: "Intake",
+    score: get("grade") ? `Gr. ${get("grade")}` : "—",
+    pct: "",
+    breakdown: body,
+    weakest: "",
+    running_stats: "",
+    next_focus: `Confidence: math ${get("math_confidence")}/5, STEM interest ${get("stem_interest")}/5, career ${get("stem_career")}`,
+  };
+
+  try {
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params);
+    form.style.display = "none";
+    thanks.classList.add("show");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (err) {
+    status.className = "err";
+    status.textContent = "Couldn't send — please email " + REPORT_EMAIL + " directly. (" + (err.text || err.message || "error") + ")";
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
