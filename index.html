@@ -216,6 +216,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,san
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 const REPORT_EMAIL = "dbohler@scienceonthecourt.com";
+const FORM_VERSION = "v1";
+const SCHOOL = "John Muir";
+
+// Google Sheet backend (Apps Script web app URL).
+// Canonical data store for intake responses — feeds the impact report.
+// Paste the deploy URL from Apps Script > Deploy > New deployment > Web app.
+const SHEETS_WEBHOOK_URL = "SHEETS_WEBHOOK_URL_HERE";
+
 const EMAILJS_CONFIG = {
   publicKey:  "ipaVLQ_Dm6mxja_XA",
   serviceId:  "service_q1l18a2",
@@ -270,8 +278,41 @@ form.addEventListener("submit", async (e) => {
     next_focus: `Confidence: math ${get("math_confidence")}/5, STEM interest ${get("stem_interest")}/5, career ${get("stem_career")}`,
   };
 
+  // Structured payload for the Google Sheet (canonical data store).
+  const sheetPayload = {
+    school:          SCHOOL,
+    form_version:    FORM_VERSION,
+    source_url:      window.location.href,
+    student_first:   get("student_first"),
+    student_last:    get("student_last"),
+    grade:           get("grade"),
+    parent_name:     get("parent_name"),
+    parent_email:    get("parent_email"),
+    math_confidence: get("math_confidence"),
+    coding_exp:      get("coding_exp"),
+    robot_exp:       get("robot_exp"),
+    stem_interest:   get("stem_interest"),
+    stem_career:     get("stem_career"),
+    bball:           get("bball"),
+    goals:           get("goals"),
+    support_needs:   get("support_needs"),
+  };
+
+  // Fire both writes in parallel. EmailJS is the notification channel;
+  // Sheets is the canonical data store. Sheets failure is non-fatal
+  // as long as the email made it through (we can manually transcribe).
+  const emailPromise = emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params);
+  const sheetPromise = SHEETS_WEBHOOK_URL.startsWith("http")
+    ? fetch(SHEETS_WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",              // Apps Script web apps don't return CORS headers
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(sheetPayload),
+      }).catch((err) => console.warn("Sheet write failed (non-fatal):", err))
+    : Promise.resolve();
+
   try {
-    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params);
+    await Promise.all([emailPromise, sheetPromise]);
     form.style.display = "none";
     thanks.classList.add("show");
     window.scrollTo({ top: 0, behavior: "smooth" });
